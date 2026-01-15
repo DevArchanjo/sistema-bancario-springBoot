@@ -22,4 +22,16 @@ public class ClienteService {
 		List<Cliente> list = repository.findAll();
 		return list;
 	}
+	
+	public Cliente findByDocument(String documento) {
+		String doc = documento.replaceAll("\\D", "");
+		if (doc.length() == 11) {
+			return repository.findByCpf(doc).orElseThrow(()-> new IllegalArgumentException("CPF não encontrado!"));
+		}
+		else if (doc.length() == 14) {
+			return repository.findByCnpj(doc).orElseThrow(()-> new IllegalArgumentException("CNPJ não encontrado!"));
+		}
+		
+		throw new IllegalArgumentException("Documento inválido!");
+	}
 }
