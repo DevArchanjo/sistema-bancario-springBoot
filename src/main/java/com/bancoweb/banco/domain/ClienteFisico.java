@@ -2,6 +2,9 @@ package com.bancoweb.banco.domain;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({"id", "titular", "endereco", "cpf", "dataDeNascimento"})
 public class ClienteFisico extends Cliente {
 	private static final long serialVersionUID = 1L;
 	
