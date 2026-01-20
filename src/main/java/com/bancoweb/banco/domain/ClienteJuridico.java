@@ -2,9 +2,12 @@ package com.bancoweb.banco.domain;
 
 import java.util.Date;
 
+import org.springframework.data.annotation.TypeAlias;
+
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@JsonPropertyOrder({"id", "titular", "endereco", "cnpj", "razaoSocial", "dataDeAbertura"})
+@TypeAlias("PJ")
+@JsonPropertyOrder({"id", "titular", "cnpj", "razaoSocial", "dataDeAbertura", "endereco"})
 public class ClienteJuridico extends Cliente {
 	private static final long serialVersionUID = 1L;
 	

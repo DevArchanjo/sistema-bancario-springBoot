@@ -7,7 +7,18 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+@JsonTypeInfo(
+	    use = JsonTypeInfo.Id.NAME,
+	    include = JsonTypeInfo.As.PROPERTY,
+	    property = "tipo"
+)
+@JsonSubTypes({
+	    @JsonSubTypes.Type(value = ClienteFisico.class, name = "PF"),
+	    @JsonSubTypes.Type(value = ClienteJuridico.class, name = "PJ")
+})
 @JsonPropertyOrder({"id", "titular", "endereco"})
 @Document(collection="cliente")
 public class Cliente implements Serializable {

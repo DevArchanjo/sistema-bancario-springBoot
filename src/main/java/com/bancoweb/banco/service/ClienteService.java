@@ -34,4 +34,8 @@ public class ClienteService {
 		
 		throw new IllegalArgumentException("Documento inválido!");
 	}
+	
+	public Cliente insert(Cliente obj) {
+		return repository.insert(obj);
+	}
 }
