@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bancoweb.banco.domain.Cliente;
+import com.bancoweb.banco.domain.ClienteFisico;
+import com.bancoweb.banco.domain.ClienteJuridico;
 import com.bancoweb.banco.repository.ClienteRepository;
 
 @Service
@@ -37,5 +39,31 @@ public class ClienteService {
 	
 	public Cliente insert(Cliente obj) {
 		return repository.insert(obj);
+	}
+	
+	public Cliente udate(Cliente obj) {
+		Cliente objAlterado = findById(obj.getId());
+		updateFields(objAlterado, obj);
+		return repository.save(objAlterado);
+	}
+	
+	public void updateFields(Cliente objNovo, Cliente obj) {
+		if (obj instanceof ClienteFisico) {
+			ClienteFisico cfNovo = (ClienteFisico)objNovo;
+			ClienteFisico cf = (ClienteFisico)obj;
+			cfNovo.setTitular(obj.getTitular());
+			cfNovo.setEndereco(obj.getEndereco());
+			cfNovo.setCpf(cf.getCpf());
+			cfNovo.setDataDeNascimeto(cf.getDataDeNascimento());
+		}
+		else {
+			ClienteJuridico cjNovo = (ClienteJuridico)objNovo;
+			ClienteJuridico cj = (ClienteJuridico)obj;
+			cjNovo.setTitular(cj.getTitular());
+			cjNovo.setEndereco(cj.getEndereco());
+			cjNovo.setCnpj(cj.getCnpj());
+			cjNovo.setRazaoSocial(cj.getRazaoSocial());
+			cjNovo.setDataDeAbertura(cj.getDataDeAbertura());
+		}
 	}
 }
