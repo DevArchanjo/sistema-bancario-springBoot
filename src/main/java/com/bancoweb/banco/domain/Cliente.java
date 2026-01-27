@@ -6,7 +6,7 @@ import java.util.Objects;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.bancoweb.banco.dto.ClienteDTO;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -19,7 +19,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 	    @JsonSubTypes.Type(value = ClienteFisico.class, name = "PF"),
 	    @JsonSubTypes.Type(value = ClienteJuridico.class, name = "PJ")
 })
-@JsonPropertyOrder({"id", "titular", "endereco"})
 @Document(collection="cliente")
 public class Cliente implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -37,6 +36,12 @@ public class Cliente implements Serializable {
 		this.id = id;
 		this.titular = titular;
 		this.endereco = endereco;
+	}
+	
+	public Cliente(ClienteDTO objDTO) {
+		this.id = objDTO.getId();
+		this.titular = objDTO.getTitular();
+		this.endereco = objDTO.getEndereco();
 	}
 
 	public String getId() {

@@ -2,6 +2,7 @@ package com.bancoweb.banco.resource;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.bancoweb.banco.domain.Cliente;
+import com.bancoweb.banco.dto.ClienteDTO;
+import com.bancoweb.banco.dto.ClienteDTOFactory;
 import com.bancoweb.banco.service.ClienteService;
 
 @RestController
@@ -25,20 +28,22 @@ public class ClienteResource {
 	private ClienteService service;
 
 	@GetMapping(value="/{id}")
-	public Cliente findById(@PathVariable String id) {
-		return service.findById(id);
+	public ResponseEntity<ClienteDTO> findById(@PathVariable String id) {
+		Cliente obj = service.findById(id);
+		return ResponseEntity.ok().body(ClienteDTOFactory.fromEntity(obj));
 	}
 
 	@GetMapping()
-	public ResponseEntity<List<Cliente>> findAll() {
+	public ResponseEntity<List<ClienteDTO>> findAll() {
 		List<Cliente> list = service.findAll();
-		return ResponseEntity.ok().body(list);
+		List<ClienteDTO> listDTO = list.stream().map(ClienteDTOFactory::fromEntity).collect(Collectors.toList());
+		return ResponseEntity.ok().body(listDTO);
 	}
 
 	@GetMapping(value="/documento/{documento}")
-	public ResponseEntity<Cliente> findByDocument(@PathVariable String documento) {
+	public ResponseEntity<ClienteDTO> findByDocument(@PathVariable String documento) {
 		Cliente busca = service.findByDocument(documento);
-		return ResponseEntity.ok().body(busca);
+		return ResponseEntity.ok().body(ClienteDTOFactory.fromEntity(busca));
 	}
 
 	@PostMapping(value="/inserir")

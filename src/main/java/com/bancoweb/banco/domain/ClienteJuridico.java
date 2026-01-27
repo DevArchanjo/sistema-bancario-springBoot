@@ -4,10 +4,9 @@ import java.util.Date;
 
 import org.springframework.data.annotation.TypeAlias;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.bancoweb.banco.dto.ClienteJuridicoDTO;
 
 @TypeAlias("PJ")
-@JsonPropertyOrder({"id", "titular", "cnpj", "razaoSocial", "dataDeAbertura", "endereco"})
 public class ClienteJuridico extends Cliente {
 	private static final long serialVersionUID = 1L;
 	
@@ -23,6 +22,13 @@ public class ClienteJuridico extends Cliente {
 		this.cnpj = cnpj;
 		this.razaoSocial = rasaoSocial;
 		this.dataDeAbertura = dataDeAbertura;
+	}
+	
+	public ClienteJuridico(ClienteJuridicoDTO objDTO) {
+		super(objDTO);
+		this.cnpj = objDTO.getCnpj();
+		this.razaoSocial = objDTO.getRazaoSocial();
+		this.dataDeAbertura = objDTO.getDataDeAbertura();
 	}
 
 	public String getCnpj() {
