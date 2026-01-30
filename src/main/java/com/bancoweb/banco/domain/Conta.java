@@ -5,10 +5,23 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+@JsonTypeInfo(
+	    use = JsonTypeInfo.Id.NAME,
+	    include = JsonTypeInfo.As.PROPERTY,
+	    property = "tipo"
+)
+@JsonSubTypes({
+	    @JsonSubTypes.Type(value = ContaCorrente.class, name = "contaCorrente"),
+	    @JsonSubTypes.Type(value = ContaPoupanca.class, name = "contaPoupanca")
+})
 @Document(collection="conta_bancaria")
 public class Conta implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -25,9 +38,9 @@ public class Conta implements Serializable {
 	public Conta() {
 	}
 
-	public Conta(String id, String numero, String senha, Double saldo, Cliente cliente) {
+	public Conta(String id, String senha, Double saldo, Cliente cliente) {
 		this.id = id;
-		this.numero = numero;
+		this.numero = gerarNumeroDaConta();
 		this.senha = senha;
 		this.saldo = saldo;
 		this.cliente = cliente;
@@ -75,6 +88,11 @@ public class Conta implements Serializable {
 
 	public List<Transacao> getTransacoes() {
 		return transacoes;
+	}
+	
+	public String gerarNumeroDaConta() {
+		int numero = ThreadLocalRandom.current().nextInt(100000, 199999);
+		return String.valueOf(numero);
 	}
 	
 	public void depositar(double quantia) {

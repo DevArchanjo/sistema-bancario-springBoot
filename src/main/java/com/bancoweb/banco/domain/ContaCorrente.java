@@ -13,8 +13,8 @@ public class ContaCorrente extends Conta {
 	public ContaCorrente() {
 	}
 
-	public ContaCorrente(String id, String numero, String senha, Double saldo, Cliente cliente) {
-		super(id, numero, senha, saldo, cliente);
+	public ContaCorrente(String id, String senha, Double saldo, Cliente cliente) {
+		super(id, senha, saldo, cliente);
 		this.chequeEspecial = 500.0;
 	}
 

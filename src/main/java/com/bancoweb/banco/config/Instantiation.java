@@ -48,8 +48,8 @@ public class Instantiation implements CommandLineRunner {
 		enderecoRepo.saveAll(Arrays.asList(end1, end2, end3));
 		clienteRepo.saveAll(Arrays.asList(cli1, cli2));
 		
-		Conta c1 = new ContaCorrente(null, "123456", "1234", 200.0, cli2);
-		Conta c2 = new ContaPoupanca(null, "678912", "1234", 130.0, cli1);
+		Conta c1 = new ContaCorrente(null, "1234", 200.0, cli2);
+		Conta c2 = new ContaPoupanca(null, "1234", 130.0, cli1);
 		contaRepo.saveAll(Arrays.asList(c1, c2));
 	}
 

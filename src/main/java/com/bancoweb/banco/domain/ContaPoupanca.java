@@ -13,12 +13,12 @@ public class ContaPoupanca extends Conta {
 	public ContaPoupanca() {
 	}
 
-	public ContaPoupanca(String id, String numero, String senha, Double saldo, Cliente cliente) {
-		super(id, numero, senha, saldo, cliente);
+	public ContaPoupanca(String id, String senha, Double saldo, Cliente cliente) {
+		super(id, senha, saldo, cliente);
 		this.taxaDeRendimento = 0.05;
 		if (saldo > 0.0) {
 			setSaldo(saldo + (taxaDeRendimento * saldo));
-			getTransacoes().add(new Transacao(null, new Date(), cliente.getTitular(), "Para a própria conta", numero, saldo));
+			getTransacoes().add(new Transacao(null, new Date(), cliente.getTitular(), "Para a própria conta", getNumero(), saldo));
 		}
 	}
 
