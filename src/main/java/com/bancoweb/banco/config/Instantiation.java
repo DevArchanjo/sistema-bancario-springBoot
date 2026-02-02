@@ -44,13 +44,15 @@ public class Instantiation implements CommandLineRunner {
 		
 		ClienteFisico cli1 = new ClienteFisico(null, "João da Silva", end1, "60029526431", sdf.parse("21/01/2000"));
 		ClienteJuridico cli2 = new ClienteJuridico(null, "Julia Borguette", end3, "00012478210022", "Congelados rápido foods", sdf.parse("13/11/1982"));
+		ClienteJuridico cli3 = new ClienteJuridico(null, "Leonardo Villa", end3, "12345678912134", "Belenus", sdf.parse("11/07/2013"));
 		
 		enderecoRepo.saveAll(Arrays.asList(end1, end2, end3));
-		clienteRepo.saveAll(Arrays.asList(cli1, cli2));
+		clienteRepo.saveAll(Arrays.asList(cli1, cli2, cli3));
 		
 		Conta c1 = new ContaCorrente(null, "1234", 200.0, cli2);
 		Conta c2 = new ContaPoupanca(null, "1234", 130.0, cli1);
-		contaRepo.saveAll(Arrays.asList(c1, c2));
+		Conta c3 = new ContaCorrente(null, "1234", 50.0, cli3);
+		contaRepo.saveAll(Arrays.asList(c1, c2, c3));
 	}
 
 }
