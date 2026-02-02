@@ -2,6 +2,7 @@ package com.bancoweb.banco.resource;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.bancoweb.banco.domain.Conta;
+import com.bancoweb.banco.dto.ContaDTO;
+import com.bancoweb.banco.dto.ContaDTOFactory;
 import com.bancoweb.banco.service.ContaService;
 
 @RestController
@@ -25,9 +28,10 @@ public class ContaResource {
 	private ContaService service;
 
 	@GetMapping()
-	public ResponseEntity<List<Conta>> findAll() {
+	public ResponseEntity<List<ContaDTO>> findAll() {
 		List<Conta> list = service.findAll();
-		return ResponseEntity.ok().body(list);
+		List<ContaDTO> listDTO = list.stream().map(ContaDTOFactory::toDTO).collect(Collectors.toList());
+		return ResponseEntity.ok().body(listDTO);
 	}
 	
 	@GetMapping(value = "/{id}")
@@ -37,8 +41,8 @@ public class ContaResource {
 	}
 	
 	@GetMapping(value = "/numero/{numero}")
-	public ResponseEntity<Conta> findByNumero(@PathVariable String numero) {
-		Conta conta = service.findByNumero(numero);
+	public ResponseEntity<ContaDTO> findByNumero(@PathVariable String numero) {
+		ContaDTO conta = ContaDTOFactory.toDTO(service.findByNumero(numero));
 		return ResponseEntity.ok().body(conta);
 	}
 
