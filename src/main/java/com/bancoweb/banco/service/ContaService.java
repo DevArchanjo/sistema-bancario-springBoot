@@ -1,5 +1,6 @@
 package com.bancoweb.banco.service;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,5 +69,25 @@ public class ContaService {
 			dadosAtualizados.setCliente(cp.getCliente());
 			dadosAtualizados.getCliente().setEndereco(cp.getCliente().getEndereco());
 		}
+	}
+	
+	public Conta depositar(Conta origem, double quantia) {
+		Conta correntista = findById(origem.getId());
+		correntista.depositar(quantia);
+		return repository.save(correntista);
+	}
+	
+	public Conta sacar(Conta origem, double quantia) {
+		Conta correntista = findById(origem.getId());
+		correntista.sacar(quantia);
+		return repository.save(correntista);
+	}
+	
+	public Conta transferir(String numero, String senha, String numeroDestino, double quantia) {
+		Conta transferente = findById(findByNumeroAndSenha(numero, senha).getId());
+		Conta beneficiario = findById(findByNumero(numeroDestino).getId());
+		transferente.transferir(transferente, beneficiario, quantia);
+		repository.saveAll(Arrays.asList(transferente, beneficiario));
+		return transferente;
 	}
 }

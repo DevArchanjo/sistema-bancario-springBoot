@@ -65,4 +65,24 @@ public class ContaResource {
 		obj = service.update(obj);
 		return ResponseEntity.noContent().build();
 	}
+	
+	@PutMapping(value = "depositar/{numero}/{senha}/{quantia}")
+	public ResponseEntity<Conta> depositar(@PathVariable String numero, @PathVariable String senha, @PathVariable double quantia) {
+		Conta origem = service.findByNumeroAndSenha(numero, senha);
+		origem = service.depositar(origem, quantia);
+		return ResponseEntity.ok().body(origem);
+	}
+	
+	@PutMapping(value = "sacar/{numero}/{senha}/{quantia}")
+	public ResponseEntity<Conta> sacar(@PathVariable String numero, @PathVariable String senha, @PathVariable double quantia) {
+		Conta origem = service.findByNumeroAndSenha(numero, senha);
+		origem = service.sacar(origem, quantia);
+		return ResponseEntity.ok().body(origem);
+	}
+	
+	@PutMapping(value = "transferir/{numero}/{senha}/{numeroDestino}/{quantia}")
+	public ResponseEntity<Conta> transferir(@PathVariable String numero, @PathVariable String senha, @PathVariable String numeroDestino, @PathVariable double quantia) {;
+		Conta conta = service.transferir(numero, senha, numeroDestino, quantia);
+		return ResponseEntity.ok().body(conta);
+	}
 }

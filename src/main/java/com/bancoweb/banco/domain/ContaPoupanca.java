@@ -32,7 +32,7 @@ public class ContaPoupanca extends Conta {
 	
 	@Override
 	public void depositar(double quantia) {
-		setSaldo((getSaldo() + quantia) * taxaDeRendimento);
+		setSaldo(getSaldo() + (getSaldo() + quantia * taxaDeRendimento));
 	}
 	
 	@Override
