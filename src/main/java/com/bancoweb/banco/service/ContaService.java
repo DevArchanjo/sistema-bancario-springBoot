@@ -9,6 +9,7 @@ import com.bancoweb.banco.domain.Conta;
 import com.bancoweb.banco.domain.ContaCorrente;
 import com.bancoweb.banco.domain.ContaPoupanca;
 import com.bancoweb.banco.repository.ContaRepository;
+import com.bancoweb.banco.service.exception.ObjectNotFoundException;
 
 @Service
 public class ContaService {
@@ -18,18 +19,18 @@ public class ContaService {
 
 	public Conta findById(String id) {
 		Conta conta = repository.findById(id)
-				.orElseThrow(() -> new NullPointerException("Conta não encontrada, id inválido"));
+				.orElseThrow(() -> new ObjectNotFoundException("Conta não encontrada, id inválido"));
 		return conta;
 	}
 
 	public Conta findByNumero(String numero) {
 		Conta conta = repository.findByNumero(numero)
-				.orElseThrow(() -> new NullPointerException("Conta não encontada, numero da conta é inválido"));
+				.orElseThrow(() -> new ObjectNotFoundException("Conta não encontada, numero da conta é inválido"));
 		return conta;
 	}
 
 	public Conta findByNumeroAndSenha(String numero, String senha) {
-		Conta conta = repository.findByNumeroAndSenha(numero, senha).orElseThrow(()-> new IllegalArgumentException("Acesso negado, verifique o número da conta e senha informados"));
+		Conta conta = repository.findByNumeroAndSenha(numero, senha).orElseThrow(()-> new ObjectNotFoundException("Acesso negado, verifique o número da conta e senha informados"));
 		return conta;
 	}
 	

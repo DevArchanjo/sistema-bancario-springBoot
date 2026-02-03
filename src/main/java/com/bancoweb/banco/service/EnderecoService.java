@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.bancoweb.banco.domain.Endereco;
 import com.bancoweb.banco.repository.EnderecoRepository;
+import com.bancoweb.banco.service.exception.ObjectNotFoundException;
 
 @Service
 public class EnderecoService {
@@ -17,7 +18,7 @@ public class EnderecoService {
 
 	public Endereco findById(String id) {
 		Optional<Endereco> endereco = repository.findById(id);
-		return endereco.orElseThrow(()-> new NullPointerException("Endereco não encontrado!"));
+		return endereco.orElseThrow(()-> new ObjectNotFoundException("Endereco não encontrado!"));
 	}
 	
 	public Endereco findByCep(String cep) {

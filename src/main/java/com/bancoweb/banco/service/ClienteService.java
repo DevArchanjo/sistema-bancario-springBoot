@@ -9,6 +9,7 @@ import com.bancoweb.banco.domain.Cliente;
 import com.bancoweb.banco.domain.ClienteFisico;
 import com.bancoweb.banco.domain.ClienteJuridico;
 import com.bancoweb.banco.repository.ClienteRepository;
+import com.bancoweb.banco.service.exception.ObjectNotFoundException;
 
 @Service
 public class ClienteService {
@@ -17,7 +18,7 @@ public class ClienteService {
 	private ClienteRepository repository;
 
 	public Cliente findById(String id) {
-		return repository.findById(id).orElseThrow(() -> new NullPointerException("Cliente não encontrado"));
+		return repository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Cliente não encontrado"));
 	}
 
 	public List<Cliente> findAll() {
@@ -28,13 +29,13 @@ public class ClienteService {
 	public Cliente findByDocument(String documento) {
 		String doc = documento.replaceAll("\\D", "");
 		if (doc.length() == 11) {
-			return repository.findByCpf(doc).orElseThrow(()-> new IllegalArgumentException("CPF não encontrado!"));
+			return repository.findByCpf(doc).orElseThrow(()-> new ObjectNotFoundException("CPF não encontrado!"));
 		}
 		else if (doc.length() == 14) {
-			return repository.findByCnpj(doc).orElseThrow(()-> new IllegalArgumentException("CNPJ não encontrado!"));
+			return repository.findByCnpj(doc).orElseThrow(()-> new ObjectNotFoundException("CNPJ não encontrado!"));
 		}
 		
-		throw new IllegalArgumentException("Documento inválido!");
+		throw new ObjectNotFoundException("Documento inválido!");
 	}
 	
 	public Cliente insert(Cliente obj) {
