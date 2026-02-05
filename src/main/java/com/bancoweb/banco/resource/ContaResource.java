@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.bancoweb.banco.domain.Conta;
+import com.bancoweb.banco.domain.Transacao;
 import com.bancoweb.banco.dto.ContaDTO;
 import com.bancoweb.banco.dto.ContaDTOFactory;
 import com.bancoweb.banco.resource.util.URL;
@@ -104,5 +105,13 @@ public class ContaResource {
 		quantia = URL.decodeParamToDouble(String.valueOf(quantia));
 		Conta conta = service.transferir(numero, senha, numeroDestino, quantia);
 		return ResponseEntity.ok().body(conta);
+	}
+	
+	@GetMapping(value = "/transacoes")
+	public ResponseEntity<List<Transacao>> listarTransacoes(@RequestParam String numero, @RequestParam String senha) {
+		numero = URL.decodeParam(numero);
+		senha = URL.decodeParam(senha);
+		List<Transacao> list = service.listarTransacoes(numero, senha);
+		return ResponseEntity.ok().body(list);
 	}
 }

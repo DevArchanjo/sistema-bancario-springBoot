@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.bancoweb.banco.domain.Conta;
 import com.bancoweb.banco.domain.ContaCorrente;
 import com.bancoweb.banco.domain.ContaPoupanca;
+import com.bancoweb.banco.domain.Transacao;
 import com.bancoweb.banco.repository.ContaRepository;
 import com.bancoweb.banco.service.exception.ObjectNotFoundException;
 
@@ -89,5 +90,11 @@ public class ContaService {
 		transferente.transferir(transferente, beneficiario, quantia);
 		repository.saveAll(Arrays.asList(transferente, beneficiario));
 		return transferente;
+	}
+	
+	public List<Transacao> listarTransacoes(String numero, String senha) {
+		Conta correntista = findByNumeroAndSenha(numero, senha);
+		List<Transacao> list = correntista.getTransacoes();
+		return list;
 	}
 }
