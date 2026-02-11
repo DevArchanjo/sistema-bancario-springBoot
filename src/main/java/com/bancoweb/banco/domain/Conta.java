@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -40,7 +39,7 @@ public class Conta implements Serializable {
 
 	public Conta(String id, String senha, Double saldo, Cliente cliente) {
 		this.id = id;
-		this.numero = gerarNumeroDaConta();
+		this.numero = GerarNumero.gerarNumeroDaConta(this);
 		this.senha = senha;
 		this.saldo = saldo;
 		this.cliente = cliente;
@@ -88,11 +87,6 @@ public class Conta implements Serializable {
 
 	public List<Transacao> getTransacoes() {
 		return transacoes;
-	}
-	
-	public String gerarNumeroDaConta() {
-		int numero = ThreadLocalRandom.current().nextInt(100000, 199999);
-		return String.valueOf(numero);
 	}
 	
 	public void depositar(double quantia) {
