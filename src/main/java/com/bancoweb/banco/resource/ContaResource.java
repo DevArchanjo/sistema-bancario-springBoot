@@ -18,8 +18,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.bancoweb.banco.domain.Conta;
 import com.bancoweb.banco.domain.Transacao;
-import com.bancoweb.banco.dto.ContaDTO;
 import com.bancoweb.banco.dto.ContaDTOFactory;
+import com.bancoweb.banco.dto.ContaFullDTO;
+import com.bancoweb.banco.dto.ContaSearchDTO;
 import com.bancoweb.banco.resource.util.URL;
 import com.bancoweb.banco.service.ContaService;
 
@@ -31,9 +32,9 @@ public class ContaResource {
 	private ContaService service;
 
 	@GetMapping()
-	public ResponseEntity<List<ContaDTO>> findAll() {
+	public ResponseEntity<List<ContaSearchDTO>> findAll() {
 		List<Conta> list = service.findAll();
-		List<ContaDTO> listDTO = list.stream().map(ContaDTOFactory::toDTO).collect(Collectors.toList());
+		List<ContaSearchDTO> listDTO = list.stream().map(ContaDTOFactory::returnToSimpleAccountSearch).collect(Collectors.toList());
 		return ResponseEntity.ok().body(listDTO);
 	}
 
@@ -44,16 +45,22 @@ public class ContaResource {
 	}
 
 	@GetMapping(value = "/numero/{numero}")
-	public ResponseEntity<ContaDTO> findByNumero(@PathVariable String numero) {
-		ContaDTO conta = ContaDTOFactory.toDTO(service.findByNumero(numero));
+	public ResponseEntity<ContaSearchDTO> findByNumero(@PathVariable String numero) {
+		ContaSearchDTO conta = ContaDTOFactory.returnToSimpleAccountSearch(service.findByNumero(numero));
 		return ResponseEntity.ok().body(conta);
+	}
+	
+	@GetMapping(value = "/buscarDocumento")
+	public ResponseEntity<List<ContaSearchDTO>> findByDocument(@RequestParam String documento) {
+		List<ContaSearchDTO> list = service.findByDocument(documento).stream().map(x -> ContaDTOFactory.returnToSimpleAccountSearch(x)).collect(Collectors.toList());
+		return ResponseEntity.ok().body(list);
 	}
 
 	@GetMapping(value = "/acesso")
-	public ResponseEntity<Conta> findByDocument(@RequestParam String numero, @RequestParam String senha) {
+	public ResponseEntity<ContaFullDTO> findByCredential(@RequestParam String numero, @RequestParam String senha) {
 		numero = URL.decodeParam(numero);
 		senha = URL.decodeParam(senha);
-		Conta conta = service.findByNumeroAndSenha(numero, senha);
+		ContaFullDTO conta = ContaDTOFactory.toDTO(service.findByNumeroAndSenha(numero, senha));
 		return ResponseEntity.ok().body(conta);
 	}
 
@@ -74,37 +81,37 @@ public class ContaResource {
 	}
 
 	@PutMapping(value = "/depositar")
-	public ResponseEntity<Conta> depositar(@RequestParam String numero, @RequestParam String senha,
+	public ResponseEntity<Void> depositar(@RequestParam String numero, @RequestParam String senha,
 			@RequestParam double quantia) {
 		numero = URL.decodeParam(numero);
 		senha = URL.decodeParam(senha);
 		quantia = URL.decodeParamToDouble(String.valueOf(quantia));
 		Conta origem = service.findByNumeroAndSenha(numero, senha);
-		origem = service.depositar(origem, quantia);
-		return ResponseEntity.ok().body(origem);
+		service.depositar(origem, quantia);
+		return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping(value = "/sacar")
-	public ResponseEntity<Conta> sacar(@RequestParam String numero, @RequestParam String senha,
+	public ResponseEntity<Void> sacar(@RequestParam String numero, @RequestParam String senha,
 			@RequestParam double quantia) {
 		numero = URL.decodeParam(numero);
 		senha = URL.decodeParam(senha);
 		quantia = URL.decodeParamToDouble(String.valueOf(quantia));
 		Conta origem = service.findByNumeroAndSenha(numero, senha);
-		origem = service.sacar(origem, quantia);
-		return ResponseEntity.ok().body(origem);
+		service.sacar(origem, quantia);
+		return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping(value = "/transferir")
-	public ResponseEntity<Conta> transferir(@RequestParam String numero, @RequestParam String senha,
+	public ResponseEntity<Void> transferir(@RequestParam String numero, @RequestParam String senha,
 			@RequestParam String numeroDestino, @RequestParam double quantia) {
 		;
 		numero = URL.decodeParam(numero);
 		senha = URL.decodeParam(senha);
 		numeroDestino = URL.decodeParam(numeroDestino);
 		quantia = URL.decodeParamToDouble(String.valueOf(quantia));
-		Conta conta = service.transferir(numero, senha, numeroDestino, quantia);
-		return ResponseEntity.ok().body(conta);
+		service.transferir(numero, senha, numeroDestino, quantia);
+		return ResponseEntity.noContent().build();
 	}
 	
 	@GetMapping(value = "/transacoes")

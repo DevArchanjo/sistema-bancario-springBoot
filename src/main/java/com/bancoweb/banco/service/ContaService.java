@@ -2,10 +2,13 @@ package com.bancoweb.banco.service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bancoweb.banco.domain.ClienteFisico;
+import com.bancoweb.banco.domain.ClienteJuridico;
 import com.bancoweb.banco.domain.Conta;
 import com.bancoweb.banco.domain.ContaCorrente;
 import com.bancoweb.banco.domain.ContaPoupanca;
@@ -32,58 +35,72 @@ public class ContaService {
 	}
 
 	public Conta findByNumeroAndSenha(String numero, String senha) {
-		Conta conta = repository.findByNumeroAndSenha(numero, senha).orElseThrow(()-> new ObjectNotFoundException("Acesso negado, verifique o número da conta e senha informados"));
+		Conta conta = repository.findByNumeroAndSenha(numero, senha).orElseThrow(
+				() -> new ObjectNotFoundException("Acesso negado, verifique o número da conta e senha informados"));
 		return conta;
 	}
-	
+
+	public List<Conta> findByDocument(String documento) {
+		return findAll().stream()
+				.filter(x -> {
+					if (x.getCliente() instanceof ClienteFisico cf) {
+						return cf.getCpf().equals(documento);
+					}
+					if (x.getCliente() instanceof ClienteJuridico cj) {
+						return cj.getCnpj().equals(documento);
+					}
+					return false;
+				}).collect(Collectors.toList());
+	}
+
 	public List<Conta> findAll() {
 		List<Conta> list = repository.findAll();
 		return list;
 	}
-	
+
 	public Conta insert(Conta obj) {
 		Conta conta = repository.insert(obj);
 		return conta;
 	}
-	
+
 	public Conta update(Conta obj) {
 		Conta objNovo = findById(obj.getId());
 		updateFields(obj, objNovo);
 		return repository.save(objNovo);
 	}
-	
+
 	public void updateFields(Conta obj, Conta objNovo) {
 		if (obj instanceof ContaCorrente) {
-			ContaCorrente cc = (ContaCorrente)obj;
-			ContaCorrente dadosAtualizados = (ContaCorrente)objNovo;
+			ContaCorrente cc = (ContaCorrente) obj;
+			ContaCorrente dadosAtualizados = (ContaCorrente) objNovo;
 			dadosAtualizados.setSenha(cc.getSenha());
 			dadosAtualizados.setNumero(cc.getNumero());
 			dadosAtualizados.setCliente(cc.getCliente());
 			dadosAtualizados.getCliente().setEndereco(cc.getCliente().getEndereco());
 		}
-		
+
 		if (obj instanceof ContaPoupanca) {
-			ContaPoupanca cp = (ContaPoupanca)obj;
-			ContaPoupanca dadosAtualizados = (ContaPoupanca)objNovo;
+			ContaPoupanca cp = (ContaPoupanca) obj;
+			ContaPoupanca dadosAtualizados = (ContaPoupanca) objNovo;
 			dadosAtualizados.setSenha(cp.getSenha());
 			dadosAtualizados.setNumero(cp.getNumero());
 			dadosAtualizados.setCliente(cp.getCliente());
 			dadosAtualizados.getCliente().setEndereco(cp.getCliente().getEndereco());
 		}
 	}
-	
+
 	public Conta depositar(Conta origem, double quantia) {
 		Conta correntista = findById(origem.getId());
 		correntista.depositar(quantia);
 		return repository.save(correntista);
 	}
-	
+
 	public Conta sacar(Conta origem, double quantia) {
 		Conta correntista = findById(origem.getId());
 		correntista.sacar(quantia);
 		return repository.save(correntista);
 	}
-	
+
 	public Conta transferir(String numero, String senha, String numeroDestino, double quantia) {
 		Conta transferente = findById(findByNumeroAndSenha(numero, senha).getId());
 		Conta beneficiario = findById(findByNumero(numeroDestino).getId());
@@ -91,7 +108,7 @@ public class ContaService {
 		repository.saveAll(Arrays.asList(transferente, beneficiario));
 		return transferente;
 	}
-	
+
 	public List<Transacao> listarTransacoes(String numero, String senha) {
 		Conta correntista = findByNumeroAndSenha(numero, senha);
 		List<Transacao> list = correntista.getTransacoes();
