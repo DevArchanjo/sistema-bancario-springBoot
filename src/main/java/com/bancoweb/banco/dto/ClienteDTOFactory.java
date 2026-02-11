@@ -6,7 +6,7 @@ import com.bancoweb.banco.domain.ClienteJuridico;
 
 public class ClienteDTOFactory {
 
-	public static ClienteDTO fromEntity(Cliente cliente) {
+	public static ClienteDTO toDTO(Cliente cliente) {
 		
 		if (cliente instanceof ClienteFisico) {
 			return new ClienteFisicoDTO((ClienteFisico) cliente);

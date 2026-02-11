@@ -30,20 +30,20 @@ public class ClienteResource {
 	@GetMapping(value="/{id}")
 	public ResponseEntity<ClienteDTO> findById(@PathVariable String id) {
 		Cliente obj = service.findById(id);
-		return ResponseEntity.ok().body(ClienteDTOFactory.fromEntity(obj));
+		return ResponseEntity.ok().body(ClienteDTOFactory.toDTO(obj));
 	}
 
 	@GetMapping()
 	public ResponseEntity<List<ClienteDTO>> findAll() {
 		List<Cliente> list = service.findAll();
-		List<ClienteDTO> listDTO = list.stream().map(ClienteDTOFactory::fromEntity).collect(Collectors.toList());
+		List<ClienteDTO> listDTO = list.stream().map(ClienteDTOFactory::toDTO).collect(Collectors.toList());
 		return ResponseEntity.ok().body(listDTO);
 	}
 
 	@GetMapping(value="/documento/{documento}")
 	public ResponseEntity<ClienteDTO> findByDocument(@PathVariable String documento) {
 		Cliente busca = service.findByDocument(documento);
-		return ResponseEntity.ok().body(ClienteDTOFactory.fromEntity(busca));
+		return ResponseEntity.ok().body(ClienteDTOFactory.toDTO(busca));
 	}
 
 	@PostMapping(value="/inserir")
