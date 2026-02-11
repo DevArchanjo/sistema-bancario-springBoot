@@ -20,6 +20,9 @@ public class ClienteJuridico extends Cliente {
 	public ClienteJuridico(String id, String titular, Endereco endereco, String cnpj, String rasaoSocial, Date dataDeAbertura) {
 		super(id, titular, endereco);
 		this.cnpj = cnpj;
+		if (this.cnpj == null || this.cnpj.length() != 14) {
+			throw new IllegalArgumentException("CNPJ inválido, verifique se o documento foi digitado corretamente");
+		}
 		this.razaoSocial = rasaoSocial;
 		this.dataDeAbertura = dataDeAbertura;
 	}

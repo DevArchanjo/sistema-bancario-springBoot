@@ -19,6 +19,9 @@ public class ClienteFisico extends Cliente {
 	public ClienteFisico(String id, String titular, Endereco endereco, String cpf, Date dataDeNascimento) {
 		super(id, titular, endereco);
 		this.cpf = cpf;
+		if (this.cpf == null || this.cpf.length() != 11) {
+			throw new IllegalArgumentException("CPF inválido, verifique se o documento foi digitado corretamente");
+		}
 		this.dataDeNascimento = dataDeNascimento;
 	}
 
